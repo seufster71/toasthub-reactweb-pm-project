@@ -9,7 +9,7 @@ import Select from '../../coreView/common/select-input';
 
 export default function PMProjectView({containerState, itemState, appPrefs, onListLimitChange,
 	onSearchChange, onSearchClick, onPaginationClick, onOrderBy, onOption,
-	closeModal, inputChange, session}) {
+	closeModal, inputChange, goBack, session}) {
 
     let columns = [];
     if (itemState.prefLabels != null && itemState.prefLabels.PM_PROJECT_PAGE != null) {
@@ -18,8 +18,16 @@ export default function PMProjectView({containerState, itemState, appPrefs, onLi
     let group = "TABLE1";
     
     let header = "";
+	let parent = null;
+	if (itemState.parent != null) {
+		parent = itemState.parent.name;
+	} 
 	if (itemState.prefTexts.PM_PROJECT_PAGE != null && itemState.prefTexts.PM_PROJECT_PAGE.PM_PROJECT_PAGE_HEADER != null) {
 		header = itemState.prefTexts.PM_PROJECT_PAGE.PM_PROJECT_PAGE_HEADER.value;
+	}
+	
+	if (goBack != null && parent != null && parent != "") {
+		header = <div>{header} : <a onClick={() => goBack()} aria-hidden="true">{parent}</a></div>;
 	}
 	
 	let deleteModalHeader = "Delete ";
@@ -48,6 +56,7 @@ export default function PMProjectView({containerState, itemState, appPrefs, onLi
 		  	      	onPaginationClick={onPaginationClick}
 		  			onOrderBy={onOrderBy}
 	  				onOption={onOption}
+    				goBack={goBack}
 		  			orderCriteria={itemState.orderCriteria}
 	  				searchCriteria={itemState.searchCriteria}
 		  	      />
@@ -55,6 +64,7 @@ export default function PMProjectView({containerState, itemState, appPrefs, onLi
 	    		<Table
 	    			containerState={containerState}
 	    			header={header}
+	    			parent={parent}
 	    			items={itemState.items}
 	    			itemCount={itemState.itemCount}
 	    			listStart={itemState.listStart}
@@ -68,6 +78,7 @@ export default function PMProjectView({containerState, itemState, appPrefs, onLi
 	    			onPaginationClick={onPaginationClick}
 	    			onOrderBy={onOrderBy}
 	    			onOption={onOption}
+	    			goBack={goBack}
 	    			orderCriteria={itemState.orderCriteria}
 					searchCriteria={itemState.searchCriteria}
 	    		/>
@@ -103,11 +114,9 @@ PMProjectView.propTypes = {
   onSearchClick: PropTypes.func,
   onPaginationClick: PropTypes.func,
   onOrderBy: PropTypes.func, 
-  openDeleteModal: PropTypes.func,
   closeModal: PropTypes.func,
-  onModify: PropTypes.func,
-  onDelete: PropTypes.func,
-  onEditRoles: PropTypes.func,
+  onOption: PropTypes.func,
   inputChange: PropTypes.func,
+  goBack: PropTypes.func,
   session: PropTypes.object
 };
